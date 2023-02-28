@@ -1,7 +1,5 @@
-import json
 import requests.exceptions
 import utils
-import os.path
 
 try:
     url = 'https://en.wikipedia.org/wiki/List_of_animal_names'
@@ -15,8 +13,7 @@ try:
 
     # because we save the data in the txt file in append mode we need to make sure that the file is empty so the data
     # won't be duplicated
-    if os.path.exists('./animals.txt'):
-        os.remove('./animals.txt')
+    utils.remove_file_if_exists('animals.txt')
 
     # we loop throw the dictionary and print the animal name and the collateral adjective in prettier way
     for animal, collateral_adjective in page_data:
@@ -27,9 +24,7 @@ try:
         with open('animals.txt', 'a') as file:
             file.write(f'animal: {animal} , collateral adjective: {collateral_adjective}\n')
 
-    # in this way we create json file and write the data in it with indent of 4 spaces which make it more readable
-    with open('animals.json', 'w') as file:
-        file.write(json.dumps(dict(page_data), indent=4))
+    utils.save_data_to_json_file(page_data, 'animals.json')
 
 # this will catch exception if the url is not valid
 except requests.exceptions.MissingSchema as url_error:
@@ -38,6 +33,6 @@ except requests.exceptions.MissingSchema as url_error:
 except IndexError as index_error:
     print('sorry we could not find the table you are looking for')
 # this will catch all teh rest exceptions we put it in order to prevent unhanded exceptions in our program that could
-# make our progream crash
+# make our program crash
 except Exception as error:
     print('some problem occurred please try again later')

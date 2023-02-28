@@ -1,3 +1,5 @@
+import json
+import os
 import string
 import requests
 from bs4 import BeautifulSoup
@@ -83,3 +85,33 @@ def get_data_json_format(table) -> dict:
         data[animal_name] = collateral_adjective
 
     return data
+
+
+def json_file_writer(data: dict, file_name: str) -> None:
+    """
+    this function get the data and the file name and write the data to the file
+    :param data: the data we want to write to the file
+    :param file_name: the name of the file we want to write the data to
+    :return: None
+    """
+    with open(file_name, 'w') as file:
+        file.write(json.dumps(dict(data), indent=4))
+
+
+def file_exists(file_name: str) -> bool:
+    """
+    this function check if the file exists
+    :param file_name: the name of the file we want to check if it exists
+    :return: True if the file exists, False if not
+    """
+    return os.path.exists(file_name)
+
+
+def remove_file_if_exists(file_name: str) -> None:
+    """
+    this function remove the file if the file exists
+    :param file_name: the name of the file we want to remove
+    :return: None
+    """
+    if file_exists(file_name):
+        os.remove(file_name)
